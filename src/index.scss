@@ -1,4 +1,6 @@
-
+html{
+  height: 150%;
+}
 
 body {
   margin: 0;
@@ -10,22 +12,24 @@ body {
 }
 
 body,#root, .App{
-  height: 100vh;
+  height: 100%;
   width: 100vw;
   min-width: 1400px;
   min-height: 900px;
 }
 
+#root{
+  overflow: hidden;
+}
+
 #home{
   display: flex;
   flex-direction: column;
-  // justify-content: center;
-  width: 70vw;
-  height: 100vh;
-  margin: auto;
+  align-items: center;
+  height: 150%;
   button{
     z-index: 99;
-    font-size: xx-large;
+    // font-size: xx-large;
     font-weight: bolder;
     margin:.5rem;
 
@@ -34,13 +38,16 @@ body,#root, .App{
 
 
 
+
 #grid-container{
   display: grid;
   grid-template-columns: repeat(36, auto);
+  // grid-template-rows: repeat(200, auto);
   background-repeat: no-repeat;
-  background-position: bottom;
-  background-size: 100%;
-  margin: auto;
+  background-position: center;
+  background-size:  100% 99%;
+  // background-size: contain;
+  background-color: red;
 }
 
 .cells{
@@ -49,10 +56,66 @@ body,#root, .App{
 }
 
 
-#cell-384{
-  // border: solid red 4px;
+// #cell-600{
+//   border: solid red;
+// }
+// #cell-636 {
+//   border: solid red;
+// }#cell-635 {
+//   border: solid red;
+// }#cell-671 {
+//   border: solid red;
+// }#cell-672 {
+//   border: solid red;
+// }#cell-708 {
+//   border: solid red;
+// }#cell-744 {
+//   border: solid red;
+// }
+// #cell-310 {
+//   border: solid red;
+// }
+
+#difficulty-selection-container{
+  display: flex;
+  height: fit-content;
+  text-align: center;
+  div{
+    border: solid rgb(33, 33, 71) 2px;
+    margin: 0 2rem;
+    width: 300px;
+    border-radius: 15px;
+    &:hover{
+      cursor: pointer;
+      border-radius: 15px;
+      transform: scale(1.01);
+    }
+  }
+  p{
+    font-size: x-large;
+  }
+  img{
+    width: 250px;
+    height: auto;
+    margin-bottom: 2rem;
+  }
+}
+
+#choose-game-images-container{
+  margin-top: 3rem;
+  img{
+    width: 300px;
+    height: 200px;
+    margin-right: 3rem;
+  }
 }
 
 
+// .magnifier-content{
+//   display: flex;
+//   position: absolute;
+//   top:0;
+//   left:3px;
+//   border:solid 3px red;
 
-
+// }

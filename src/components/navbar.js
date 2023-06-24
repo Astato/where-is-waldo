@@ -1,7 +1,7 @@
 import "../navbar.scss";
 const Navbar = () => {
   return (
-    <nav class="top-bar topbar-responsive">
+    <nav id="navbar" class="top-bar topbar-responsive">
       <div class="top-bar-title">
         <span data-responsive-toggle="topbar-responsive" data-hide-for="medium">
           <button class="menu-icon" type="button" data-toggle></button>
