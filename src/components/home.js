@@ -1,12 +1,14 @@
 import { createContext, useEffect, useRef, useState } from "react";
+import gamerules from "./gamerules";
+import GameChoosePage from "./gamechoosepage";
+import zoominIcon from "../icons-images/zoom_in.png";
+import zoomoutIcon from "../icons-images/zoom_out.png";
+import magnificationLargeIcon from "../icons-images/magnification_large.png";
+import magnificationSmalIcon from "../icons-images/magnification_small.png";
 import waldo from "../game-images/waldo.png";
 import walda from "../game-images/walda.jpg";
 import evilWaldo from "../game-images/evil-waldo.jpg";
 import wizard from "../game-images/wizard.jpg";
-import easy1 from "../game-images/easy/easy-1.jpg";
-import easy2 from "../game-images/easy/easy-2.jpg";
-import easy3 from "../game-images/easy/easy-3.jpg";
-import hard1 from "../game-images/hard/hard-1.jpeg";
 import HTMLMagnifier from "html-magnifier/html-magnifier";
 
 const magnifier = new HTMLMagnifier({
@@ -18,10 +20,6 @@ magnifier.on("syncScrollBars", function (magnifierContent) {
   const scrollableArea = magnifierContent.querySelector("#root");
   const scrollTop = document.querySelector("html").scrollTop;
   scrollableArea.scrollTop = scrollTop;
-  console.log(
-    "scrollTOp HTML = " + scrollTop,
-    "root set to scrollTop value ? " + scrollableArea.scrollTop
-  );
 });
 
 magnifier.on("prepareContent", function (magnifierContent) {
@@ -32,10 +30,7 @@ magnifier.on("prepareContent", function (magnifierContent) {
   }
 });
 
-const easyImages = [easy1, easy2, easy3];
-const hardImages = [hard1];
-
-function CreateGrid({ zoom, setZoom, setClickedCell }) {
+function CreateGrid({ zoom, setZoom, gameImg }) {
   const containerWidth = (70 / 100) * window.innerWidth;
   const containerHeigth = (70 / 100) * window.innerHeight;
   const cellWidth = (containerWidth / 36).toString() + "px";
@@ -55,22 +50,6 @@ function CreateGrid({ zoom, setZoom, setClickedCell }) {
 
   const cells = [];
   for (let w = 0; w < 792; w++) {
-    if (w === 74) {
-      cells.push(
-        <div
-          id={w}
-          className="cells"
-          key={w}
-          style={{ width: cellWidth, height: cellHeight }}
-        >
-          {" "}
-          <button className="button" onClick={() => handleZoom("increaseZoom")}>
-            +
-          </button>
-        </div>
-      );
-      continue;
-    }
     if (w === 2) {
       cells.push(
         <div
@@ -79,8 +58,28 @@ function CreateGrid({ zoom, setZoom, setClickedCell }) {
           key={w}
           style={{ width: cellWidth, height: cellHeight }}
         >
-          <button className="button" onClick={() => handleZoom("decreaseZoom")}>
-            {" "}
+          <button
+            className="button tiny"
+            onClick={() => handleZoom("increaseZoom")}
+          >
+            +
+          </button>
+        </div>
+      );
+      continue;
+    }
+    if (w === 0) {
+      cells.push(
+        <div
+          id={w}
+          className="cells"
+          key={w}
+          style={{ width: cellWidth, height: cellHeight }}
+        >
+          <button
+            className="button tiny"
+            onClick={() => handleZoom("decreaseZoom")}
+          >
             -
           </button>
         </div>
@@ -92,7 +91,7 @@ function CreateGrid({ zoom, setZoom, setClickedCell }) {
           className="cells"
           key={w}
           onClick={(e) => {
-            setClickedCell(e.target.id);
+            gamerules(e.target.id, gameImg);
             console.log(e.target.id);
           }}
           style={{ width: cellWidth, height: cellHeight }}
@@ -103,162 +102,14 @@ function CreateGrid({ zoom, setZoom, setClickedCell }) {
   return cells;
 }
 
-function checkForCell(cellid) {
-  const cell = Number(cellid.split("-")[1]);
-  //easy-2
-  switch (
-    cell /// easy 2 waldo
-  ) {
-    case 310: /// easy-2 waldo
-      document
-        .getElementById("cell-310")
-        .setAttribute(
-          "style",
-          " height:200%; border:solid red 4px; border-radius:40%; margin-top: -20px"
-        );
-      return;
-    case 297: ///
-    case 261: /// wizard
-      document
-        .getElementById("cell-261")
-        .setAttribute("style", "border:solid red 4px; border-radius:40%");
-      return;
-    case 255: //evil waldo
-      document
-        .getElementById("cell-255")
-        .setAttribute("style", " border:solid red 4px; border-radius:40%");
-      return;
-    case 316: ///walda
-      document
-        .getElementById("cell-316")
-        .setAttribute(
-          "style",
-          "border:solid red 4px; border-radius:40%; margin-left:-10px; margin-right:10px; margin-bottom:-10px"
-        );
-      return;
-  }
-  //easy - 3
-  switch (
-    cell /// easy 3 waldo
-  ) {
-    case 591: /// easy-3 waldo
-      document
-        .getElementById("cell-591")
-        .setAttribute(
-          "style",
-          " height:200%; border:solid red 4px; border-radius:40%; margin-top: -10px"
-        );
-      return;
-    case 635: /// wizard
-      document
-        .getElementById("cell-635")
-        .setAttribute(
-          "style",
-          "border:solid red 4px; border-radius:40%; margin: -15px -5px 5px 5px"
-        );
-      return;
-    case 741: //evil waldo
-    case 777:
-      document
-        .getElementById("cell-777")
-        .setAttribute(
-          "style",
-          " border:solid red 4px; border-radius:40%; margin: -20px 6px 10px -6px"
-        );
-      return;
-    case 483: ///walda
-      document
-        .getElementById("cell-483")
-        .setAttribute(
-          "style",
-          "border:solid red 4px; border-radius:40%; margin-left:6px; margin-right:-6px; margin-top:-3px"
-        );
-      return;
-  }
-  // switch (cell) {
-  //   case 384:
-  //   case 383:
-  //   case 348:
-  //   case 349:
-  //   case 420:
-  //   case 419:
-  //   case 456:
-  //     alert("found willy ");
-  //     document
-  //       .getElementById("cell-383")
-  //       .setAttribute(
-  //         "style",
-  //         "grid-column: span 2; grid-row: span 4; border:solid red 4px; border-radius:40%; margin-left: .5rem"
-  //       );
-  //     return true;
-  //   default:
-  //     return null;
-  // }
-}
-
-const GameChoosePage = ({ setGameImg, gameImg }) => {
-  const [disable, setDisable] = useState(0);
-
-  const [difficulty, setDifficulty] = useState(null);
-  const handleSelection = (difficulty) => {
-    disable ? setDisable(0) : setDisable(1);
-    setDifficulty(difficulty);
-  };
-  if (gameImg) {
-    return <></>;
-  }
-
-  if (!disable) {
-    return (
-      <div>
-        <h2>Choose Difficulty</h2>
-        <div id="difficulty-selection-container">
-          <div
-            className="flex-child-auto"
-            onClick={() => handleSelection(easyImages)}
-          >
-            <p>Easy</p>
-            <img src={easy1} alt="" />
-          </div>
-          <div
-            className="flex-child-auto"
-            onClick={() => handleSelection("medium")}
-          >
-            <p>Medium</p>
-            <img />
-          </div>
-          <div
-            className="flex-child-auto"
-            onClick={() => handleSelection(hardImages)}
-          >
-            <p>Hard</p>
-            <img src={hard1} />
-          </div>
-        </div>
-      </div>
-    );
-  }
-  if (disable) {
-    const images = difficulty.map((image) => {
-      return <img src={image} alt="" onClick={() => setGameImg(image)}></img>;
-    });
-    return (
-      <div>
-        <button className="button large" onClick={handleSelection}>
-          &#9664; back
-        </button>
-        <h2 style={{ marginTop: "2rem" }}>Choose Game</h2>
-        <div id="choose-game-images-container">{images}</div>
-      </div>
-    );
-  }
-};
-
 const Home = () => {
   const [zoom, setZoom] = useState(1);
   const [gameImg, setGameImg] = useState(false);
-  const [clickedCell, setClickedCell] = useState(null);
   const [windowSize, setWindowSize] = useState(window.innerWidth);
+  const [showMagnifyingGlass, setShowMagnifyingGlass] = useState(false);
+  const [centerX, setCenterX] = useState(null);
+  const [centerY, setCenterY] = useState(null);
+
   const handleResize = () => {
     setWindowSize(window.innerWidth);
   };
@@ -268,16 +119,15 @@ const Home = () => {
     return () => window.removeEventListener("resize", handleResize);
   });
 
-  useEffect(() => {
-    if (clickedCell) {
-      if (checkForCell(clickedCell)) {
-        setClickedCell(null);
-      }
+  const handleClick = (e, arg) => {
+    if (arg) {
+      magnifier.show();
+      e.target.textContent = "Close Magnifying Glass";
+    } else {
+      magnifier.hide();
+      e.target.textContent = "Magnifying Glass";
     }
-  });
-
-  const handleClick = () => {
-    magnifier.show();
+    setShowMagnifyingGlass(arg);
   };
 
   const handleEditMagnifyingGlass = (edit) => {
@@ -302,6 +152,10 @@ const Home = () => {
     }
   };
 
+  const handleFollowMouse = (e) => {
+    setCenterY(e.clientY - 10 + window.scrollY + "px");
+    setCenterX(e.clientX - 10 + "px");
+  };
   return (
     <div id="home">
       <button
@@ -310,52 +164,86 @@ const Home = () => {
         onClick={() => {
           setGameImg(null);
           setZoom(1);
+          gamerules("", "");
         }}
         hidden={!gameImg}
-        magnify={magnifier.hide()}
       >
         Back
       </button>
       <div>
         <button
           className={`button large ${gameImg ? "" : "hide"}`}
-          onClick={handleClick}
+          onClick={(e) => handleClick(e, !showMagnifyingGlass)}
         >
           Magnifying Glass
         </button>
         <button
-          className={`button large ${gameImg ? "" : "hide"}`}
+          className={`button ${gameImg ? "" : "hide"}`}
           onClick={() => handleEditMagnifyingGlass("increase")}
+          data-tooltip
+          tabIndex="1"
+          title="Increase Glass Size"
         >
-          + Size
+          <img
+            className="magnification-icons"
+            src={magnificationLargeIcon}
+            alt="Magnification increase"
+          />
         </button>
         <button
-          className={`button large ${gameImg ? "" : "hide"}`}
+          className={`button  ${gameImg ? "" : "hide"}`}
           onClick={() => handleEditMagnifyingGlass("decrease")}
           hidden={!gameImg}
+          data-tooltip
+          tabIndex="1"
+          title="Decrease Glass Size"
         >
-          - Size
+          <img
+            className="magnification-icons"
+            src={magnificationSmalIcon}
+            alt="Magnification decrease"
+          />
         </button>
         <button
-          className={`button large ${gameImg ? "" : "hide"}`}
+          className={`button  ${gameImg ? "" : "hide"}`}
           onClick={() => handleEditMagnifyingGlass("zoomout")}
+          data-tooltip
+          tabIndex="1"
+          title="Decrease Glass Zoom"
         >
-          -Zoom
+          <img
+            className="magnification-icons"
+            src={zoomoutIcon}
+            alt="Zoom out"
+          />
         </button>
         <button
-          className={`button large ${gameImg ? "" : "hide"}`}
+          className={`button   ${gameImg ? "" : "hide"}`}
           onClick={() => handleEditMagnifyingGlass("zoomin")}
+          data-tooltip
+          tabIndex="1"
+          title="Increase Glass Zoom"
         >
-          +Zoom
+          <img className="magnification-icons" src={zoominIcon} alt="Zoom in" />
         </button>
       </div>
       <div id="zoom-buttons-container"></div>
       <div hidden={!gameImg}>
-        <img src={evilWaldo}></img>
-        <img src={wizard}></img>
-        <img src={walda}></img>
+        {typeof gameImg === "string" && gameImg.includes("hard") ? (
+          <span>
+            <img src={evilWaldo}></img> <img src={walda}></img>
+          </span>
+        ) : (
+          ""
+        )}
+        {typeof gameImg === "string" && !gameImg.includes("easy") ? (
+          <img src={wizard}></img>
+        ) : (
+          ""
+        )}
         <img src={waldo}></img>
       </div>
+
       <GameChoosePage setGameImg={setGameImg} gameImg={gameImg} />
       <div
         id="grid-container"
@@ -363,17 +251,19 @@ const Home = () => {
           backgroundImage: "url(" + gameImg + ")",
           transform: "scale(" + zoom + ")",
         }}
+        onMouseMove={handleFollowMouse}
       >
         {gameImg ? (
-          <CreateGrid
-            zoom={zoom}
-            setZoom={setZoom}
-            setClickedCell={setClickedCell}
-          />
+          <CreateGrid zoom={zoom} setZoom={setZoom} gameImg={gameImg} />
         ) : (
-          <></>
+          magnifier.hide()
         )}
       </div>
+      <span
+        id="targeting-box"
+        hidden={!gameImg}
+        style={{ position: "absolute", top: centerY, left: centerX }}
+      ></span>
     </div>
   );
 };
