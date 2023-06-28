@@ -1,27 +1,32 @@
 import { useState } from "react";
 
-import helpIcon from "../icons-images/help-icon.png";
-import easy1 from "../game-images/easy/easy-1.jpg";
-import easy2 from "../game-images/easy/easy-2.jpg";
-import easy3 from "../game-images/easy/easy-3.jpg";
-import hard1 from "../game-images/hard/hard-1.jpg";
-import hard2 from "../game-images/hard/hard-2.jpg";
-import hard3 from "../game-images/hard/hard-3.jpg";
-import medium1 from "../game-images/medium/medium-1.jpg";
-import medium2 from "../game-images/medium/medium-2.jpg";
-import medium3 from "../game-images/medium/medium-3.jpg";
+import helpIcon from "../assets/icons-images/help-icon.png";
+import easy1 from "../assets/game-images/easy/easy-1.jpg";
+import easy2 from "../assets/game-images/easy/easy-2.jpg";
+import easy3 from "../assets/game-images/easy/easy-3.jpg";
+import hard1 from "../assets/game-images/hard/hard-1.jpg";
+import hard2 from "../assets/game-images/hard/hard-2.jpg";
+import hard3 from "../assets/game-images/hard/hard-3.jpg";
+import medium1 from "../assets/game-images/medium/medium-1.jpg";
+import medium2 from "../assets/game-images/medium/medium-2.jpg";
+import medium3 from "../assets/game-images/medium/medium-3.jpg";
 
 const easyImages = [easy1, easy2, easy3];
 const hardImages = [hard1, hard2, hard3];
 const mediumImages = [medium1, medium2, medium3];
 
-const GameChoosePage = ({ setGameImg, gameImg }) => {
+const GameChoosePage = ({ setGameImg, gameImg, modalRef, homeRef }) => {
   const [disable, setDisable] = useState(0);
   const [difficulty, setDifficulty] = useState(null);
 
   const handleSelection = (difficulty) => {
     disable ? setDisable(0) : setDisable(1);
     setDifficulty(difficulty);
+  };
+
+  const handleModal = () => {
+    modalRef.current.showModal();
+    homeRef.current.classList.add("modal-overlay");
   };
   if (gameImg) {
     return <></>;
@@ -46,6 +51,7 @@ const GameChoosePage = ({ setGameImg, gameImg }) => {
               Easy
               <img
                 style={{ width: "20px", margin: "1rem 0 1rem 1rem" }}
+                className="tooltip-icon"
                 src={helpIcon}
                 data-tooltip
                 tabIndex={"1"}
@@ -71,6 +77,7 @@ const GameChoosePage = ({ setGameImg, gameImg }) => {
                 style={{ width: "20px", margin: "1rem 0 1rem 1rem" }}
                 src={helpIcon}
                 data-tooltip
+                className="tooltip-icon"
                 tabIndex={"1"}
                 title="In this game mode need to find Waldo and the Wizard"
                 data-position="top"
@@ -95,7 +102,8 @@ const GameChoosePage = ({ setGameImg, gameImg }) => {
                 src={helpIcon}
                 data-tooltip
                 tabIndex={"1"}
-                title="In this game mode you need to find all characters and are harder to find"
+                className="tooltip-icon"
+                title="In this game mode you need to find all characters"
                 data-position="top"
                 data-alignment="center"
               />
@@ -115,6 +123,7 @@ const GameChoosePage = ({ setGameImg, gameImg }) => {
           alt=""
           onClick={() => {
             setGameImg(image);
+            handleModal();
           }}
         ></img>
       );

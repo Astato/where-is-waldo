@@ -1,15 +1,17 @@
-import { createContext, useEffect, useRef, useState } from "react";
-import gamerules from "./gamerules";
+import { useEffect, useState, useRef } from "react";
+import gamerules, { setIsGameWon } from "../utils/gamerules.js";
 import GameChoosePage from "./gamechoosepage";
-import zoominIcon from "../icons-images/zoom_in.png";
-import zoomoutIcon from "../icons-images/zoom_out.png";
-import magnificationLargeIcon from "../icons-images/magnification_large.png";
-import magnificationSmalIcon from "../icons-images/magnification_small.png";
-import waldo from "../game-images/waldo.png";
-import walda from "../game-images/walda.jpg";
-import evilWaldo from "../game-images/evil-waldo.jpg";
-import wizard from "../game-images/wizard.jpg";
+import Stopwatch from "./stopwatch.js";
+import zoominIcon from "../assets/icons-images/zoom_in.png";
+import zoomoutIcon from "../assets/icons-images/zoom_out.png";
+import magnificationLargeIcon from "../assets/icons-images/magnification_large.png";
+import magnificationSmalIcon from "../assets/icons-images/magnification_small.png";
+import waldo from "../assets/game-images/waldo.png";
+import walda from "../assets/game-images/walda.jpg";
+import evilWaldo from "../assets/game-images/evil-waldo.jpg";
+import wizard from "../assets/game-images/wizard.jpg";
 import HTMLMagnifier from "html-magnifier/html-magnifier";
+import { isGameWon } from "../utils/gamerules.js";
 
 const magnifier = new HTMLMagnifier({
   width: 300,
@@ -109,6 +111,12 @@ const Home = () => {
   const [showMagnifyingGlass, setShowMagnifyingGlass] = useState(false);
   const [centerX, setCenterX] = useState(null);
   const [centerY, setCenterY] = useState(null);
+  const [startTimer, setStartTimer] = useState(false);
+  const [gameTime, setGameTime] = useState(null);
+  const [isInputHidden, setIsInputHidden] = useState("input-hidden");
+  const modalRef = useRef(null);
+  const homeRef = useRef(null);
+  const winModalRef = useRef(null);
 
   const handleResize = () => {
     setWindowSize(window.innerWidth);
@@ -118,6 +126,14 @@ const Home = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   });
+
+  useEffect(() => {
+    console.log(gameTime);
+
+    if (gameTime) {
+      winModalRef.current.showModal();
+    }
+  }, [gameTime]);
 
   const handleClick = (e, arg) => {
     if (arg) {
@@ -156,16 +172,83 @@ const Home = () => {
     setCenterY(e.clientY - 10 + window.scrollY + "px");
     setCenterX(e.clientX - 10 + "px");
   };
+
+  const handleBackButton = () => {
+    setGameImg(null);
+    setZoom(1);
+    gamerules("", "");
+    setStartTimer(false);
+    setGameTime(null);
+    setIsGameWon();
+  };
+
+  const handleRegisterTime = (e) => {
+    setIsInputHidden("input-shown");
+    e.target.innerText = "Save";
+  };
+
   return (
-    <div id="home">
+    <div id="home" ref={homeRef}>
+      <dialog id="win-dialog" ref={winModalRef}>
+        <div id="win-dialog-items-container">
+          <h2>Congratulations!!!! </h2>
+          {gameTime ? (
+            <strong>
+              Your Finished in:
+              {gameTime[0] === 0
+                ? gameTime[1] + " Seconds"
+                : gameTime[0] + ":" + gameTime[1]}
+            </strong>
+          ) : (
+            <></>
+          )}
+          <div>
+            <div className={isInputHidden}>
+              <input type="text"></input>
+            </div>
+            <button className="button" onClick={handleRegisterTime}>
+              Register time
+            </button>
+            <button
+              className="button"
+              onClick={() => {
+                winModalRef.current.close();
+                handleBackButton();
+                setIsInputHidden("input-hidden");
+              }}
+            >
+              New Game
+            </button>
+          </div>
+        </div>
+      </dialog>
+
+      {gameImg ? (
+        <>
+          <Stopwatch
+            startTimer={startTimer}
+            setStartTimer={setStartTimer}
+            setGameTime={setGameTime}
+          />
+          <button
+            className="button"
+            style={{ position: "absolute", top: "24rem", left: ".5rem" }}
+            onClick={() => {
+              setStartTimer("pause");
+              modalRef.current.showModal();
+              homeRef.current.classList.add("modal-overlay");
+            }}
+          >
+            Pause
+          </button>
+        </>
+      ) : (
+        <></>
+      )}
       <button
         id="back-button"
         className={`button large ${gameImg ? "" : "hide"}`}
-        onClick={() => {
-          setGameImg(null);
-          setZoom(1);
-          gamerules("", "");
-        }}
+        onClick={handleBackButton}
         hidden={!gameImg}
       >
         Back
@@ -244,7 +327,30 @@ const Home = () => {
         <img src={waldo}></img>
       </div>
 
-      <GameChoosePage setGameImg={setGameImg} gameImg={gameImg} />
+      <GameChoosePage
+        setGameImg={setGameImg}
+        gameImg={gameImg}
+        modalRef={modalRef}
+        homeRef={homeRef}
+      />
+      <dialog ref={modalRef} id="modal" className="modal">
+        <div id="modal-content-wrapper">
+          <p style={{ textAlign: "center", fontSize: "55px" }}>Good Luck!</p>
+          {/* <div style={{ textAlign: "center", fontSize: "45px" }}>
+            <Stopwatch />
+          </div> */}
+          <button
+            className="button large"
+            onClick={() => {
+              modalRef.current.close();
+              homeRef.current.classList.remove("modal-overlay");
+              setStartTimer(true);
+            }}
+          >
+            Start timer!
+          </button>
+        </div>
+      </dialog>
       <div
         id="grid-container"
         style={{

@@ -23,6 +23,8 @@ body,#root, .App{
   overflow: hidden;
 }
 
+
+
 #home{
   display: flex;
   flex-direction: column;
@@ -72,26 +74,6 @@ body,#root, .App{
   border: solid red 3px;
 }
 
-
-// #cell-600{
-//   border: solid red;
-// }
-// #cell-636 {
-//   border: solid red;
-// }#cell-635 {
-//   border: solid red;
-// }#cell-671 {
-//   border: solid red;
-// }#cell-672 {
-//   border: solid red;
-// }#cell-708 {
-//   border: solid red;
-// }#cell-744 {
-//   border: solid red;
-// }
-// #cell-310 {
-//   border: solid red;
-// }
 
 #difficulty-selection-container{
   display: flex;
@@ -150,15 +132,6 @@ body,#root, .App{
 }
 
 
-// .magnifier-content{
-//   display: flex;
-//   position: absolute;
-//   top:0;
-//   left:3px;
-//   border:solid 3px red;
-
-// }
-
 .magnification-icons{
   width: 30px;
   filter: invert(1);
@@ -182,20 +155,100 @@ body,#root, .App{
 }
 
 
-.miss-targeting-box{
-  @extend #targeting-box;
-  animation: shake .1s   2 both
+// .miss-targeting-box{
+//   @extend #targeting-box;
+//   animation: shake .1s   2 both
 
-} 
+// } 
 
-@keyframes shake {
-  0%{
-    transform: translate(0px);
+// @keyframes shake {
+//   0%{
+//     transform: translate(0px);
+//   }
+//   50%{
+//     transform: translate(-5px);
+//   }
+//   100%{
+//     transform: translate(5px);
+//   }
+// }
+
+.tooltip-icon:hover{
+  cursor: help;
+  transform: scale(1.1);
+}
+
+#modal{
+  width: 50%;
+  height: 50%;
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 0 5px 3px gray;
+  overflow: hidden;
+  #modal-content-wrapper{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
   }
-  50%{
-    transform: translate(-5px);
+
+  button{
+    margin: auto;
   }
-  100%{
-    transform: translate(5px);
+  
+}
+.modal-overlay{
+  background-color: rgba(255, 255, 255, 0.603);
+  opacity: .3;
+  #grid-container{
+    opacity: 0;
+  }
+  #timer-text{
+    opacity: 0;
+  }
+
+}
+
+#stopwatch-container{
+  position: absolute;
+  left: 1rem;
+  top: 20rem;
+  font-size: 30px;
+  font-weight: 600;
+  #stopwatch{
+    display: flex;
+    p{
+      background-color: rgba(0, 0, 0, 0.788);
+      width: 4rem;
+      color: white;
+      height: 3rem;
+      text-align: center;
+      border-radius: 15px;
+    }
+  }
+}
+
+
+.input-hidden{
+  display: none;
+}
+
+#win-dialog{
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 0 5px 3px gray;
+  #win-dialog-items-container{
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    strong{
+      margin: 2rem 0;
+    }
+    div{
+      margin: 1rem 0;
+      input{
+        margin-bottom: 2rem;
+      }
+    }
   }
 }
